@@ -916,7 +916,8 @@ def main(args):
             model.save_pretrained(os.path.join(output_dir, sub_dir))
 
             # make sure to pop weight so that corresponding model is not saved again
-            weights.pop()
+            if weights:
+                weights.pop()
 
     def load_model_hook(models, input_dir):
         while len(models) > 0:
