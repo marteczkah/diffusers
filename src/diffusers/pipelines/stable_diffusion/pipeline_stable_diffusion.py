@@ -673,6 +673,8 @@ class StableDiffusionPipeline(DiffusionPipeline, TextualInversionLoaderMixin, Lo
                 latent_model_input = torch.cat([latents] * 2) if do_classifier_free_guidance else latents
                 latent_model_input = self.scheduler.scale_model_input(latent_model_input, t)
 
+                print(latent_model_input.mean())
+
                 # predict the noise residual
                 noise_pred = self.unet(
                     latent_model_input,
@@ -681,6 +683,8 @@ class StableDiffusionPipeline(DiffusionPipeline, TextualInversionLoaderMixin, Lo
                     cross_attention_kwargs=cross_attention_kwargs,
                     return_dict=False,
                 )[0]
+
+                print(noise_pred.mean())
 
                 # perform guidance
                 if do_classifier_free_guidance:
