@@ -673,8 +673,6 @@ class StableDiffusionPipeline(DiffusionPipeline, TextualInversionLoaderMixin, Lo
                 latent_model_input = torch.cat([latents] * 2) if do_classifier_free_guidance else latents
                 latent_model_input = self.scheduler.scale_model_input(latent_model_input, t)
 
-                print(latent_model_input.mean())
-
                 # predict the noise residual
                 noise_pred = self.unet(
                     latent_model_input,
@@ -683,8 +681,6 @@ class StableDiffusionPipeline(DiffusionPipeline, TextualInversionLoaderMixin, Lo
                     cross_attention_kwargs=cross_attention_kwargs,
                     return_dict=False,
                 )[0]
-
-                print(noise_pred.mean())
 
                 # perform guidance
                 if do_classifier_free_guidance:
@@ -698,6 +694,7 @@ class StableDiffusionPipeline(DiffusionPipeline, TextualInversionLoaderMixin, Lo
                 # compute the previous noisy sample x_t -> x_t-1
                 latents = self.scheduler.step(noise_pred, t, latents, **extra_step_kwargs, return_dict=False)[0]
 
+                print(latents.mean())
                 # call the callback, if provided
                 if i == len(timesteps) - 1 or ((i + 1) > num_warmup_steps and (i + 1) % self.scheduler.order == 0):
                     progress_bar.update()
